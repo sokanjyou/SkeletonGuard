@@ -1,0 +1,37 @@
+{
+  "image_size_hint": [1280, 720],
+  "zones": [
+    {
+      "name": "floor_main",
+      "kind": "floor",
+      "polygon": [[0, 360], [1280, 360], [1280, 720], [0, 720]],
+      "height_m": 0.0,
+      "rest_allowed": false,
+      "fall_risk": 1.0
+    },
+    {
+      "name": "tatami_rest_area",
+      "kind": "tatami",
+      "polygon": [[90, 420], [520, 390], [620, 700], [40, 720]],
+      "height_m": 0.05,
+      "rest_allowed": true,
+      "fall_risk": 0.65
+    },
+    {
+      "name": "low_bed",
+      "kind": "bed",
+      "polygon": [[710, 330], [1190, 330], [1240, 620], [690, 640]],
+      "height_m": 0.32,
+      "rest_allowed": true,
+      "fall_risk": 0.75
+    },
+    {
+      "name": "bathroom_entrance",
+      "kind": "bathroom",
+      "polygon": [[560, 360], [700, 360], [720, 720], [540, 720]],
+      "height_m": 0.0,
+      "rest_allowed": false,
+      "fall_risk": 1.35
+    }
+  ]
+}

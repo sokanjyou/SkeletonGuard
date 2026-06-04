@@ -1,0 +1,141 @@
+source: 0
+zones: config/zones_config.json
+
+stream:
+  open_retries: 3
+  retry_delay_s: 1.0
+  read_retries: 2
+
+pose:
+  weights: data/models/yolo26m-pose.pt
+  device: auto
+  prefer_cuda: true
+  cuda_index: 0
+  conf: 0.35
+  iou: 0.5
+  require_pose: true
+
+tracker:
+  backend: pose_iou
+  iou_threshold: 0.25
+  max_missed: 15
+  max_center_distance: 180.0
+  min_keypoint_confidence: 0.2
+  iou_weight: 0.45
+  center_weight: 0.20
+  keypoint_weight: 0.35
+
+lifter:
+  num_keypoints: 17
+  subspace_dim: 18
+  max_iterations: 12
+  min_iterations: 3
+  convergence_tol: 0.0001
+  step_size: 0.035
+  l1_lambda: 0.015
+  coefficient_smooth_weight: 0.08
+  reprojection_weight: 1.0
+  bone_weight: 0.35
+  depth_smooth_weight: 0.08
+  min_confidence: 0.15
+  camera_scale: 2.0
+  fallback_on_nonconvergence: true
+
+kalman:
+  dt: 0.0333333333
+  process_noise: 0.025
+  measurement_noise: 0.09
+  min_confidence: 0.15
+  graph_alpha: 0.08
+  bone_length_eta: 0.35
+  graph_iterations: 2
+  velocity_blend: 0.35
+  velocity_noise_scale: 1.25
+  max_process_noise_scale: 8.0
+
+features:
+  feature_size: 32
+  min_confidence: 0.15
+  normalize: true
+  normalization_alpha: 0.05
+  normalization_min_std: 0.001
+  normalization_clip: 5.0
+
+fall:
+  threshold: 0.68
+  window: 18
+  sustained_frames: 5
+  peak_threshold: 0.82
+  low_height_m: 0.45
+  impact_velocity: 1.15
+  rest_suppression: 0.55
+  risk_boost: 0.25
+  weight_posture: 0.42
+  weight_impact: 0.28
+  weight_height: 0.30
+  rest_contact_threshold: 0.35
+  rest_impact_threshold: 0.35
+  high_risk_surface_kinds:
+    - stairs
+    - bathroom
+    - kitchen
+  base_context_factor: 1.0
+  fall_risk_baseline: 1.0
+  fall_risk_weight: 0.20
+  topology_weight: 0.15
+  strong_evidence_raw_threshold: 0.82
+  strong_evidence_impact_threshold: 0.55
+  context_factor_min: 0.25
+  context_factor_max: 1.45
+  stable_score_threshold_ratio: 0.85
+  fast_fall_impact_threshold: 0.55
+  fast_fall_posture_threshold: 0.55
+  fast_fall_height_threshold: 0.45
+  omnidirectional_impact_weight: 0.75
+  min_expected_upright_span: 0.75
+  upright_span_low_height_multiplier: 3.2
+
+lstm:
+  fusion:
+    enabled: auto
+    weights: data/models/lstm_fall.pt
+    device: auto
+    prefer_cuda: true
+    cuda_index: 0
+    window: 18
+    score_window: 5
+    weight: 0.35
+    threshold: null
+    sustained_frames: 5
+    peak_threshold: 0.82
+    evidence_threshold: 0.45
+  model:
+    num_keypoints: 17
+    coords_per_keypoint: 3
+    input_size: 32
+    hidden_size: 96
+    num_layers: 2
+    dropout: 0.2
+    num_classes: 2
+
+alerts:
+  min_interval_s: 2.0
+  mqtt:
+    enabled: false
+    host: 127.0.0.1
+    port: 1883
+    topic: fall3d/alerts
+    client_id: fall3d-detector
+    username: null
+    password: null
+    qos: 1
+    retain: false
+    keepalive: 60
+    connect_timeout_s: 3.0
+    min_interval_s: 2.0
+    extra:
+      source: home_camera
+
+runtime:
+  state_ttl_frames: 60
+  max_person_states: 128
