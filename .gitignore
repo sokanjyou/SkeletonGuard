@@ -6,3 +6,4 @@ runs/
 data/models/*.pt
 data/models/*.pth
 data/models/*.onnx
+架构.txt
